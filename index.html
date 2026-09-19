@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>家事紀錄表 HouseWork</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+
+  <header class="app-header">
+    <h1>🏡 家事紀錄表</h1>
+    <div class="date-picker">
+      <label for="board-date">紀錄日期</label>
+      <input type="date" id="board-date">
+      <button id="today-btn" class="ghost-btn">今天</button>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab-btn active" data-tab="board">🧩 打卡看板</button>
+    <button class="tab-btn" data-tab="history">📜 歷史紀錄</button>
+    <button class="tab-btn" data-tab="stats">📊 統計摘要</button>
+    <button class="tab-btn" data-tab="data">💾 資料管理</button>
+  </nav>
+
+  <main>
+
+    <!-- BOARD TAB -->
+    <section class="tab-panel active" id="panel-board">
+      <p class="hint">拖曳（或點擊）下方方塊，記錄到今天的看板上。「被罵」方塊會請你留言備註。</p>
+
+      <div class="palette" id="palette"><!-- chore blocks injected --></div>
+
+      <div class="dropzone" id="dropzone">
+        <div class="dropzone-placeholder" id="dropzone-placeholder">
+          👇 把方塊拖到這裡，或直接點擊上面的方塊
+        </div>
+        <div class="board-entries" id="board-entries"></div>
+      </div>
+    </section>
+
+    <!-- HISTORY TAB -->
+    <section class="tab-panel" id="panel-history">
+      <div class="history-toolbar">
+        <input type="text" id="history-search" placeholder="🔍 搜尋備註或項目...">
+        <select id="history-filter">
+          <option value="">全部項目</option>
+        </select>
+      </div>
+      <div class="history-list" id="history-list"></div>
+    </section>
+
+    <!-- STATS TAB -->
+    <section class="tab-panel" id="panel-stats">
+      <div class="stats-summary" id="stats-summary"></div>
+      <h3 class="stats-heading">近 7 天紀錄量</h3>
+      <div class="stats-chart" id="stats-chart"></div>
+      <h3 class="stats-heading">項目累計次數</h3>
+      <div class="stats-bars" id="stats-bars"></div>
+    </section>
+
+    <!-- DATA TAB -->
+    <section class="tab-panel" id="panel-data">
+      <div class="data-card">
+        <h3>匯出資料</h3>
+        <p class="hint">匯出的檔案會下載到瀏覽器的下載資料夾，請手動移到專案的 <code>SaveData/</code> 資料夾保存。</p>
+        <div class="btn-row">
+          <button id="export-json" class="primary-btn">⬇️ 匯出 JSON</button>
+          <button id="export-csv" class="primary-btn">⬇️ 匯出 CSV</button>
+        </div>
+      </div>
+      <div class="data-card">
+        <h3>匯入資料</h3>
+        <p class="hint">從 <code>SaveData/</code> 資料夾選取先前匯出的 JSON 檔案來還原紀錄。</p>
+        <input type="file" id="import-file" accept="application/json">
+      </div>
+      <div class="data-card danger-card">
+        <h3>清除資料</h3>
+        <p class="hint">清除瀏覽器內所有的家事紀錄，請先匯出備份！</p>
+        <button id="clear-data" class="danger-btn">🗑️ 清除全部紀錄</button>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Memo Modal -->
+<div class="modal-backdrop" id="memo-modal">
+  <div class="modal">
+    <h3 id="memo-modal-title">😢 被罵了...發生什麼事？</h3>
+    <textarea id="memo-input" rows="4" placeholder="寫下備註，例如：忘記倒垃圾被唸..."></textarea>
+    <div class="btn-row">
+      <button id="memo-cancel" class="ghost-btn">取消</button>
+      <button id="memo-save" class="primary-btn">儲存</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

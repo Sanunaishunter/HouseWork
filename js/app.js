@@ -9,6 +9,7 @@
     { id: "sweep",   label: "掃地",        emoji: "🧹", cls: "chore-sweep",   color: "#06D6A0" },
     { id: "mop",     label: "拖地",        emoji: "🪣", cls: "chore-mop",     color: "#118AB2" },
     { id: "scolded", label: "被罵",        emoji: "😢", cls: "chore-scolded", color: "#EF476F", hasMemo: true },
+    { id: "doctor",  label: "看病",        emoji: "🏥", cls: "chore-doctor",  color: "#00C2A8", hasMemo: true },
     { id: "outing",  label: "帶出門去玩",  emoji: "🎡", cls: "chore-outing",  color: "#9B5DE5" },
     { id: "work",    label: "上班",        emoji: "💼", cls: "chore-work",    color: "#00BBF9" },
     { id: "sidejob", label: "副業",        emoji: "🧑‍💻", cls: "chore-sidejob", color: "#8AC926" },
@@ -187,7 +188,7 @@
     const modal = document.getElementById("memo-modal");
     const title = document.getElementById("memo-modal-title");
     const input = document.getElementById("memo-input");
-    title.textContent = `${chore.emoji} ${chore.label}了...發生什麼事？`;
+    title.textContent = `${chore.emoji} ${chore.label}｜新增備註`;
     input.value = "";
     modal.classList.add("open");
     input.focus();

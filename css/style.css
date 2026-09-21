@@ -11,6 +11,7 @@
   --c-sweep:   #06D6A0;
   --c-mop:     #118AB2;
   --c-scolded: #EF476F;
+  --c-doctor:  #00C2A8;
   --c-outing:  #9B5DE5;
   --c-work:    #00BBF9;
   --c-sidejob: #8AC926;
@@ -141,6 +142,7 @@ body {
 .chore-sweep   { background: linear-gradient(135deg, var(--c-sweep), #6bf0c2); color:#00382a;}
 .chore-mop     { background: linear-gradient(135deg, var(--c-mop), #6cd4f7); color:#00263a;}
 .chore-scolded { background: linear-gradient(135deg, var(--c-scolded), #ff8aa3); color:#4a0013;}
+.chore-doctor  { background: linear-gradient(135deg, var(--c-doctor), #7ff0e0); color:#00352c;}
 .chore-outing  { background: linear-gradient(135deg, var(--c-outing), #c9a3ff); color:#2c0a55;}
 .chore-work    { background: linear-gradient(135deg, var(--c-work), #7fe0ff); color:#00304a;}
 .chore-sidejob { background: linear-gradient(135deg, var(--c-sidejob), #d3f28a); color:#2a3a00;}

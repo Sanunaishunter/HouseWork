@@ -13,6 +13,7 @@
   --c-scolded: #EF476F;
   --c-outing:  #9B5DE5;
   --c-work:    #00BBF9;
+  --c-sidejob: #8AC926;
   --c-credit:  #F15BB5;
 }
 
@@ -142,6 +143,7 @@ body {
 .chore-scolded { background: linear-gradient(135deg, var(--c-scolded), #ff8aa3); color:#4a0013;}
 .chore-outing  { background: linear-gradient(135deg, var(--c-outing), #c9a3ff); color:#2c0a55;}
 .chore-work    { background: linear-gradient(135deg, var(--c-work), #7fe0ff); color:#00304a;}
+.chore-sidejob { background: linear-gradient(135deg, var(--c-sidejob), #d3f28a); color:#2a3a00;}
 .chore-credit  { background: linear-gradient(135deg, var(--c-credit), #ffa9dc); color:#5a0033;}
 
 /* Dropzone */

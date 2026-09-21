@@ -11,6 +11,7 @@
     { id: "scolded", label: "被罵",        emoji: "😢", cls: "chore-scolded", color: "#EF476F", hasMemo: true },
     { id: "outing",  label: "帶出門去玩",  emoji: "🎡", cls: "chore-outing",  color: "#9B5DE5" },
     { id: "work",    label: "上班",        emoji: "💼", cls: "chore-work",    color: "#00BBF9" },
+    { id: "sidejob", label: "副業",        emoji: "🧑‍💻", cls: "chore-sidejob", color: "#8AC926" },
     { id: "credit",  label: "信用卡遲繳",  emoji: "💳", cls: "chore-credit",  color: "#F15BB5" },
   ];
 

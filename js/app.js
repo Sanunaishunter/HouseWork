@@ -24,7 +24,8 @@
 
   /** @type {Record[]} */
   let records = loadRecords();
-  let pendingChoreId = null; // chore awaiting memo confirmation
+  let pendingChoreId = null; // chore awaiting memo confirmation for a NEW record
+  let pendingRecordId = null; // existing record whose memo is being edited
 
   // ---------- Storage ----------
   function loadRecords() {
@@ -140,7 +141,8 @@
     if (!chore) return;
     if (chore.hasMemo) {
       pendingChoreId = choreId;
-      openMemoModal(chore);
+      pendingRecordId = null;
+      openMemoModal(chore, "");
       return;
     }
     addRecord(choreId, null);
@@ -177,14 +179,25 @@
       if (!chore) return;
       const chip = document.createElement("div");
       chip.className = "entry-chip " + chore.cls;
+      if (chore.hasMemo) chip.classList.add("editable");
       chip.innerHTML = `
         <span class="emoji">${chore.emoji}</span>
         <span class="title">${chore.label}</span>
         <span class="time">${rec.time}</span>
-        ${rec.memo ? `<span class="memo-tag" title="${escapeHtml(rec.memo)}">📝 ${escapeHtml(truncate(rec.memo, 12))}</span>` : ""}
+        ${chore.hasMemo
+          ? (rec.memo
+            ? `<span class="memo-tag" title="${escapeHtml(rec.memo)}">📝 ${escapeHtml(truncate(rec.memo, 12))}</span>`
+            : `<span class="memo-tag memo-tag-empty">+ 備註</span>`)
+          : ""}
         <button class="del-btn" data-id="${rec.id}" title="刪除">✕</button>
       `;
-      chip.querySelector(".del-btn").addEventListener("click", () => deleteRecord(rec.id));
+      chip.querySelector(".del-btn").addEventListener("click", e => {
+        e.stopPropagation();
+        deleteRecord(rec.id);
+      });
+      if (chore.hasMemo) {
+        chip.addEventListener("click", () => editRecordMemo(rec));
+      }
       container.appendChild(chip);
     });
   }
@@ -198,27 +211,47 @@
   }
 
   // ---------- Memo Modal ----------
-  function openMemoModal(chore) {
+  function openMemoModal(chore, existingMemo) {
     const modal = document.getElementById("memo-modal");
     const title = document.getElementById("memo-modal-title");
     const input = document.getElementById("memo-input");
-    title.textContent = `${chore.emoji} ${chore.label}｜新增備註`;
-    input.value = "";
+    title.textContent = `${chore.emoji} ${chore.label}｜${existingMemo ? "編輯備註" : "新增備註"}`;
+    input.value = existingMemo || "";
     modal.classList.add("open");
     input.focus();
+  }
+
+  function editRecordMemo(rec) {
+    const chore = choreById[rec.typeId];
+    if (!chore) return;
+    pendingChoreId = null;
+    pendingRecordId = rec.id;
+    openMemoModal(chore, rec.memo || "");
   }
 
   function closeMemoModal() {
     document.getElementById("memo-modal").classList.remove("open");
     pendingChoreId = null;
+    pendingRecordId = null;
   }
 
   function initMemoModal() {
     document.getElementById("memo-cancel").addEventListener("click", closeMemoModal);
     document.getElementById("memo-save").addEventListener("click", () => {
-      if (!pendingChoreId) return closeMemoModal();
       const memo = document.getElementById("memo-input").value.trim();
-      addRecord(pendingChoreId, memo);
+      if (pendingRecordId) {
+        const rec = records.find(r => r.id === pendingRecordId);
+        if (rec) {
+          rec.memo = memo || undefined;
+          saveRecords();
+          renderBoard();
+          renderHistory();
+          renderStats();
+          showToast("✅ 備註已更新");
+        }
+      } else if (pendingChoreId) {
+        addRecord(pendingChoreId, memo);
+      }
       closeMemoModal();
     });
   }
@@ -270,17 +303,26 @@
         const chore = choreById[rec.typeId];
         const item = document.createElement("div");
         item.className = "history-item";
+        if (chore.hasMemo) item.classList.add("editable");
         item.style.borderLeftColor = chore.color;
         item.innerHTML = `
           <span class="emoji">${chore.emoji}</span>
           <div class="info">
             <div class="title">${chore.label}</div>
-            ${rec.memo ? `<div class="memo">📝 ${escapeHtml(rec.memo)}</div>` : ""}
+            ${rec.memo
+              ? `<div class="memo">📝 ${escapeHtml(rec.memo)}</div>`
+              : (chore.hasMemo ? `<div class="memo memo-empty">+ 點擊新增備註</div>` : "")}
           </div>
           <span class="time">${rec.time}</span>
           <button class="del-btn" data-id="${rec.id}" title="刪除">🗑️</button>
         `;
-        item.querySelector(".del-btn").addEventListener("click", () => deleteRecord(rec.id));
+        item.querySelector(".del-btn").addEventListener("click", e => {
+          e.stopPropagation();
+          deleteRecord(rec.id);
+        });
+        if (chore.hasMemo) {
+          item.addEventListener("click", () => editRecordMemo(rec));
+        }
         dayWrap.appendChild(item);
       });
       list.appendChild(dayWrap);

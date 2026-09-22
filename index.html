@@ -11,11 +11,6 @@
 
   <header class="app-header">
     <h1>🏡 家事紀錄表</h1>
-    <div class="date-picker">
-      <label for="board-date">紀錄日期</label>
-      <input type="date" id="board-date">
-      <button id="today-btn" class="ghost-btn">今天</button>
-    </div>
   </header>
 
   <nav class="tabs" id="tabs">
@@ -29,15 +24,36 @@
 
     <!-- BOARD TAB -->
     <section class="tab-panel active" id="panel-board">
-      <p class="hint">拖曳（或點擊）下方方塊，記錄到今天的看板上。「被罵」、「看病」方塊會請你留言備註。</p>
-
-      <div class="palette" id="palette"><!-- chore blocks injected --></div>
-
-      <div class="dropzone" id="dropzone">
-        <div class="dropzone-placeholder" id="dropzone-placeholder">
-          👇 把方塊拖到這裡，或直接點擊上面的方塊
+      <div class="calendar-card">
+        <div class="calendar-header">
+          <button id="cal-prev" class="ghost-btn cal-nav-btn" title="上個月">‹</button>
+          <div class="calendar-month-label" id="calendar-month-label"></div>
+          <button id="cal-next" class="ghost-btn cal-nav-btn" title="下個月">›</button>
+          <button id="cal-today-btn" class="ghost-btn">今天</button>
         </div>
-        <div class="board-entries" id="board-entries"></div>
+        <div class="calendar-weekdays">
+          <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+        </div>
+        <div class="calendar-grid" id="calendar-grid"><!-- day cells injected --></div>
+      </div>
+
+      <div class="day-detail">
+        <div class="day-detail-header">
+          <h3 id="day-detail-title"></h3>
+          <button id="add-task-btn" class="primary-btn">＋ 新增任務</button>
+        </div>
+
+        <div class="dropzone" id="dropzone">
+          <div class="dropzone-placeholder" id="dropzone-placeholder">
+            這天還沒有紀錄，點擊「＋ 新增任務」開始記錄吧！
+          </div>
+          <div class="board-entries" id="board-entries"></div>
+        </div>
+
+        <div class="palette-drawer" id="palette-drawer" hidden>
+          <p class="hint">拖曳（或點擊）下方方塊，記錄到這天的看板上。「被罵」、「看病」方塊會請你留言備註。</p>
+          <div class="palette" id="palette"><!-- chore blocks injected --></div>
+        </div>
       </div>
     </section>
 

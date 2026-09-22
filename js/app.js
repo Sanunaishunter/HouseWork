@@ -27,6 +27,11 @@
   let pendingChoreId = null; // chore awaiting memo confirmation for a NEW record
   let pendingRecordId = null; // existing record whose memo is being edited
 
+  let selectedDate = todayStr(); // YYYY-MM-DD currently shown in the day detail panel
+  const todayParts = new Date();
+  let calendarYear = todayParts.getFullYear();
+  let calendarMonth = todayParts.getMonth(); // 0-indexed
+
   // ---------- Storage ----------
   function loadRecords() {
     try {
@@ -133,7 +138,95 @@
   }
 
   function getBoardDate() {
-    return document.getElementById("board-date").value || todayStr();
+    return selectedDate;
+  }
+
+  // ---------- Calendar ----------
+  function pad2(n) {
+    return String(n).padStart(2, "0");
+  }
+
+  function dateKey(year, month, day) {
+    return `${year}-${pad2(month + 1)}-${pad2(day)}`;
+  }
+
+  function selectDate(dateStr) {
+    selectedDate = dateStr;
+    const drawer = document.getElementById("palette-drawer");
+    drawer.hidden = true;
+    document.getElementById("add-task-btn").textContent = "＋ 新增任務";
+    renderBoard();
+  }
+
+  function renderCalendar() {
+    const label = document.getElementById("calendar-month-label");
+    label.textContent = `${calendarYear} 年 ${calendarMonth + 1} 月`;
+
+    const countByDate = {};
+    records.forEach(r => {
+      countByDate[r.date] = (countByDate[r.date] || 0) + 1;
+    });
+
+    const grid = document.getElementById("calendar-grid");
+    grid.innerHTML = "";
+
+    const firstWeekday = new Date(calendarYear, calendarMonth, 1).getDay();
+    const daysInMonth = new Date(calendarYear, calendarMonth + 1, 0).getDate();
+    const today = todayStr();
+
+    for (let i = 0; i < firstWeekday; i++) {
+      const filler = document.createElement("div");
+      filler.className = "cal-day cal-day-filler";
+      grid.appendChild(filler);
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const key = dateKey(calendarYear, calendarMonth, day);
+      const cell = document.createElement("button");
+      cell.type = "button";
+      cell.className = "cal-day";
+      if (key === today) cell.classList.add("cal-day-today");
+      if (key === selectedDate) cell.classList.add("cal-day-selected");
+
+      const count = countByDate[key] || 0;
+      cell.innerHTML = `
+        <span class="cal-day-num">${day}</span>
+        ${count ? `<span class="cal-day-dot">${count > 9 ? "9+" : count}</span>` : ""}
+      `;
+      cell.addEventListener("click", () => selectDate(key));
+      grid.appendChild(cell);
+    }
+  }
+
+  function initCalendar() {
+    document.getElementById("cal-prev").addEventListener("click", () => {
+      calendarMonth--;
+      if (calendarMonth < 0) { calendarMonth = 11; calendarYear--; }
+      renderCalendar();
+    });
+    document.getElementById("cal-next").addEventListener("click", () => {
+      calendarMonth++;
+      if (calendarMonth > 11) { calendarMonth = 0; calendarYear++; }
+      renderCalendar();
+    });
+    document.getElementById("cal-today-btn").addEventListener("click", () => {
+      const now = new Date();
+      calendarYear = now.getFullYear();
+      calendarMonth = now.getMonth();
+      selectDate(todayStr());
+    });
+    document.getElementById("add-task-btn").addEventListener("click", () => {
+      const drawer = document.getElementById("palette-drawer");
+      const btn = document.getElementById("add-task-btn");
+      drawer.hidden = !drawer.hidden;
+      btn.textContent = drawer.hidden ? "＋ 新增任務" : "－ 收合方塊";
+    });
+  }
+
+  function renderDayDetailTitle() {
+    const title = document.getElementById("day-detail-title");
+    const count = records.filter(r => r.date === selectedDate).length;
+    title.textContent = `${formatDateLabel(selectedDate)} · ${count} 項紀錄`;
   }
 
   function handleChoreDropped(choreId) {
@@ -173,6 +266,9 @@
 
     container.innerHTML = "";
     placeholder.style.display = todays.length ? "none" : "block";
+
+    renderCalendar();
+    renderDayDetailTitle();
 
     todays.forEach(rec => {
       const chore = choreById[rec.typeId];
@@ -482,15 +578,8 @@
   function init() {
     migrateRecords();
 
-    const dateInput = document.getElementById("board-date");
-    dateInput.value = todayStr();
-    dateInput.addEventListener("change", renderBoard);
-    document.getElementById("today-btn").addEventListener("click", () => {
-      dateInput.value = todayStr();
-      renderBoard();
-    });
-
     initTabs();
+    initCalendar();
     initPalette();
     initDropzone();
     initMemoModal();

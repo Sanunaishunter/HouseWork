@@ -4,9 +4,11 @@
   const STORAGE_KEY = "housework_records_v1";
 
   const CHORE_TYPES = [
-    { id: "laundry", label: "洗衣",        emoji: "🧺", cls: "chore-laundry", color: "#FFD166" },
-    { id: "cooking", label: "煮飯(三餐)",  emoji: "🍳", cls: "chore-cooking", color: "#FF9F1C" },
-    { id: "sweep",   label: "掃地",        emoji: "🧹", cls: "chore-sweep",   color: "#06D6A0" },
+    { id: "laundry",   label: "洗衣",  emoji: "🧺", cls: "chore-laundry",   color: "#FFD166" },
+    { id: "breakfast", label: "早餐",  emoji: "🍳", cls: "chore-breakfast", color: "#FFB627" },
+    { id: "lunch",     label: "中餐",  emoji: "🍱", cls: "chore-lunch",     color: "#FF9F1C" },
+    { id: "dinner",    label: "晚餐",  emoji: "🍲", cls: "chore-dinner",    color: "#FB5607" },
+    { id: "sweep",     label: "掃地",  emoji: "🧹", cls: "chore-sweep",     color: "#06D6A0" },
     { id: "mop",     label: "拖地",        emoji: "🪣", cls: "chore-mop",     color: "#118AB2" },
     { id: "scolded", label: "被罵",        emoji: "😢", cls: "chore-scolded", color: "#EF476F", hasMemo: true },
     { id: "doctor",  label: "看病",        emoji: "🏥", cls: "chore-doctor",  color: "#00C2A8", hasMemo: true },
@@ -37,6 +39,18 @@
 
   function saveRecords() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+  }
+
+  // "cooking" (煮飯三餐) was split into breakfast/lunch/dinner; keep old records visible.
+  function migrateRecords() {
+    let changed = false;
+    records.forEach(r => {
+      if (r.typeId === "cooking") {
+        r.typeId = "lunch";
+        changed = true;
+      }
+    });
+    if (changed) saveRecords();
   }
 
   function todayStr() {
@@ -424,6 +438,8 @@
 
   // ---------- Init ----------
   function init() {
+    migrateRecords();
+
     const dateInput = document.getElementById("board-date");
     dateInput.value = todayStr();
     dateInput.addEventListener("change", renderBoard);

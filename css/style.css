@@ -6,8 +6,10 @@
   --shadow: 0 6px 16px rgba(0,0,0,0.08);
   --radius: 18px;
 
-  --c-laundry: #FFD166;
-  --c-cooking: #FF9F1C;
+  --c-laundry:   #FFD166;
+  --c-breakfast: #FFB627;
+  --c-lunch:     #FF9F1C;
+  --c-dinner:    #FB5607;
   --c-sweep:   #06D6A0;
   --c-mop:     #118AB2;
   --c-scolded: #EF476F;
@@ -138,7 +140,9 @@ body {
 .chore-block .label { font-size: 14px; }
 
 .chore-laundry { background: linear-gradient(135deg, var(--c-laundry), #ffe29a); color:#5a4300;}
-.chore-cooking { background: linear-gradient(135deg, var(--c-cooking), #ffc169); color:#4a2900;}
+.chore-breakfast { background: linear-gradient(135deg, var(--c-breakfast), #ffd580); color:#4a2900;}
+.chore-lunch     { background: linear-gradient(135deg, var(--c-lunch), #ffc169); color:#4a2900;}
+.chore-dinner    { background: linear-gradient(135deg, var(--c-dinner), #ff9a63); color:#4a1400;}
 .chore-sweep   { background: linear-gradient(135deg, var(--c-sweep), #6bf0c2); color:#00382a;}
 .chore-mop     { background: linear-gradient(135deg, var(--c-mop), #6cd4f7); color:#00263a;}
 .chore-scolded { background: linear-gradient(135deg, var(--c-scolded), #ff8aa3); color:#4a0013;}

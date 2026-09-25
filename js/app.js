@@ -73,6 +73,59 @@
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
   }
 
+  // ---------- Password lock (smoke screen) ----------
+  // Pure client-side string comparison - NOT real access control. Anyone who
+  // opens this file can read LOCK_PASSWORD. It only hides the board from a
+  // casual glance; it does not protect the data (still plain in localStorage).
+  const LOCK_PASSWORD = "16696001277431815";
+  const LOGGED_OUT_KEY = "housework_logged_out";
+
+  function showPasswordInput() {
+    document.getElementById("password-trigger").classList.add("hidden");
+    const input = document.getElementById("lock-password");
+    input.classList.remove("hidden");
+    input.focus();
+  }
+
+  function hidePasswordInput() {
+    const input = document.getElementById("lock-password");
+    input.classList.add("hidden");
+    input.value = "";
+    document.getElementById("password-trigger").classList.remove("hidden");
+  }
+
+  function unlockApp() {
+    localStorage.removeItem(LOGGED_OUT_KEY);
+    document.getElementById("appRoot").classList.remove("hidden");
+  }
+
+  function lockApp() {
+    localStorage.setItem(LOGGED_OUT_KEY, "true");
+    document.getElementById("appRoot").classList.add("hidden");
+  }
+
+  function initPasswordLock() {
+    const trigger = document.getElementById("password-trigger");
+    const input = document.getElementById("lock-password");
+    const confirmMark = document.getElementById("password-confirm");
+
+    if (localStorage.getItem(LOGGED_OUT_KEY) === "true") {
+      document.getElementById("appRoot").classList.add("hidden");
+    }
+
+    trigger.addEventListener("click", showPasswordInput);
+    input.addEventListener("blur", hidePasswordInput);
+    input.addEventListener("input", () => {
+      if (input.value === LOCK_PASSWORD) {
+        hidePasswordInput();
+        confirmMark.classList.remove("hidden");
+        setTimeout(() => confirmMark.classList.add("hidden"), 1200);
+        unlockApp();
+      }
+    });
+    document.getElementById("logout-btn").addEventListener("click", lockApp);
+  }
+
   // ---------- Toast ----------
   let toastTimer = null;
   function showToast(msg) {
@@ -578,6 +631,7 @@
   function init() {
     migrateRecords();
 
+    initPasswordLock();
     initTabs();
     initCalendar();
     initPalette();

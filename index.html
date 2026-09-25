@@ -7,7 +7,13 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<div class="app">
+<div id="password-corner" class="password-corner">
+  <button id="password-trigger" class="password-trigger" type="button" aria-label="密碼"></button>
+  <input id="lock-password" class="hidden" type="password" placeholder="密碼" autocomplete="off">
+  <span id="password-confirm" class="password-confirm hidden">✓</span>
+</div>
+
+<div class="app" id="appRoot">
 
   <header class="app-header">
     <h1>🏡 家事紀錄表</h1>
@@ -96,6 +102,11 @@
         <h3>清除資料</h3>
         <p class="hint">清除瀏覽器內所有的家事紀錄，請先匯出備份！</p>
         <button id="clear-data" class="danger-btn">🗑️ 清除全部紀錄</button>
+      </div>
+      <div class="data-card">
+        <h3>畫面鎖定</h3>
+        <p class="hint">點擊「登出」會把整個看板收起來，變成空白畫面；資料不會被刪除，用右上角的隱藏熱區輸入密碼即可恢復。</p>
+        <button id="logout-btn" class="ghost-btn">🚪 登出</button>
       </div>
     </section>
 

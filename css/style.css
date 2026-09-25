@@ -36,6 +36,50 @@ body {
   padding: 20px 16px 60px;
 }
 
+.hidden { display: none !important; }
+
+/* ---------- Password corner (smoke-screen lock) ---------- */
+.password-corner {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 16px;
+}
+
+.password-trigger {
+  width: 44px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: default;
+}
+.password-trigger.hidden { display: none; }
+
+.password-corner input {
+  font-family: inherit;
+  border: 1px solid #e5dfe9;
+  background: var(--card-bg);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 7px 10px;
+  font-size: 12px;
+  width: 150px;
+  outline: none;
+}
+.password-corner input:focus { border-color: #9B5DE5; }
+
+.password-confirm {
+  color: #06D6A0;
+  font-weight: 700;
+  font-size: 16px;
+}
+
 .app-header {
   display: flex;
   flex-wrap: wrap;

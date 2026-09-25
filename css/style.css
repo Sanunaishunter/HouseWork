@@ -39,42 +39,45 @@ body {
 .hidden { display: none !important; }
 
 /* ---------- Password corner (smoke-screen lock) ---------- */
+/* A single input sits here at all times, fully invisible (transparent
+   border/background, default cursor). It's never swapped for another
+   element, so touching it never shifts anything under the pointer.
+   Hovering or focusing it just reveals a faint outline to type into. */
 .password-corner {
   position: fixed;
   top: 0;
   right: 0;
   z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-  padding: 16px;
+  width: 182px;
+  height: 64px;
 }
-
-.password-trigger {
-  width: 44px;
-  height: 32px;
-  background: transparent;
-  border: none;
-  padding: 0;
-  cursor: default;
-}
-.password-trigger.hidden { display: none; }
 
 .password-corner input {
+  position: absolute;
+  top: 16px;
+  right: 16px;
   font-family: inherit;
-  border: 1px solid #e5dfe9;
-  background: var(--card-bg);
+  border: 1px solid transparent;
+  background: transparent;
   color: var(--text);
   border-radius: 8px;
   padding: 7px 10px;
   font-size: 12px;
   width: 150px;
+  height: 32px;
   outline: none;
+  cursor: default;
 }
-.password-corner input:focus { border-color: #9B5DE5; }
+.password-corner input.active {
+  border-color: #9B5DE5;
+  background: var(--card-bg);
+  cursor: text;
+}
 
 .password-confirm {
+  position: absolute;
+  top: 20px;
+  right: 172px;
   color: #06D6A0;
   font-weight: 700;
   font-size: 16px;

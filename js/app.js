@@ -80,18 +80,14 @@
   const LOCK_PASSWORD = "16696001277431815";
   const LOGGED_OUT_KEY = "housework_logged_out";
 
-  function showPasswordInput() {
-    document.getElementById("password-trigger").classList.add("hidden");
-    const input = document.getElementById("lock-password");
-    input.classList.remove("hidden");
+  function activateLock(input) {
+    input.classList.add("active");
     input.focus();
   }
 
-  function hidePasswordInput() {
-    const input = document.getElementById("lock-password");
-    input.classList.add("hidden");
+  function deactivateLock(input) {
+    input.classList.remove("active");
     input.value = "";
-    document.getElementById("password-trigger").classList.remove("hidden");
   }
 
   function unlockApp() {
@@ -105,7 +101,6 @@
   }
 
   function initPasswordLock() {
-    const trigger = document.getElementById("password-trigger");
     const input = document.getElementById("lock-password");
     const confirmMark = document.getElementById("password-confirm");
 
@@ -113,13 +108,16 @@
       document.getElementById("appRoot").classList.add("hidden");
     }
 
-    trigger.addEventListener("click", showPasswordInput);
-    input.addEventListener("blur", hidePasswordInput);
+    // Same element the whole time (never swapped for another one), so
+    // touching it can't shift anything under the pointer or re-trigger itself.
+    input.addEventListener("mouseenter", () => activateLock(input));
+    input.addEventListener("focus", () => activateLock(input));
+    input.addEventListener("blur", () => deactivateLock(input));
     input.addEventListener("input", () => {
       if (input.value === LOCK_PASSWORD) {
-        hidePasswordInput();
         confirmMark.classList.remove("hidden");
         setTimeout(() => confirmMark.classList.add("hidden"), 1200);
+        input.blur();
         unlockApp();
       }
     });
